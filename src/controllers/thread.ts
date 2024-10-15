@@ -53,7 +53,10 @@ export const detailThread = async (req: Request, res: Response) => {
 export const feed = async (req: Request, res: Response) => {
   try {
     const userId = res.locals.user.id
-    const threads = await threadService.getThreadsByLoggedInUser(userId)
+    const skip = req.query.skip ? +req.query.skip : 0
+    console.log(skip)
+
+    const threads = await threadService.getThreadsByLoggedInUser(userId, skip)
     res.json(threads)
   } catch (error) {
     console.log(error)

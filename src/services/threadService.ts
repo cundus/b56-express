@@ -13,8 +13,8 @@ export const getThreads = async () => {
   return
 }
 
-export const getThreadsByLoggedInUser = async (userId: number) => {
-  return await threadRepository.findThreadByFollowerId(userId)
+export const getThreadsByLoggedInUser = async (userId: number, skip: number) => {
+  return await threadRepository.findThreadByFollowerId(userId, skip)
 }
 
 export const getThreadsByUsername = async () => {

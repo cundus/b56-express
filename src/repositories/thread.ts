@@ -39,16 +39,24 @@ export const findThreadById = async (id: number) => {
   })
 }
 
-export const findThreadByFollowerId = async (id: number) => {
+export const findThreadByFollowerId = async (id: number, skip: number) => {
   return prisma.thread.findMany({
     where: {
-      user: {
-        following: {
-          some: {
-            followerId: id
+      OR: [
+        {
+          user: {
+            following: {
+              some: {
+                followerId: id
+              }
+            }
           }
+        },
+        {
+          userId: id
         }
-      }
+      ],
+      mainThreadId: null
     },
     include: {
       images: true,
@@ -65,6 +73,8 @@ export const findThreadByFollowerId = async (id: number) => {
           likes: true
         }
       }
-    }
+    },
+    take: 10,
+    skip: skip
   })
 }
