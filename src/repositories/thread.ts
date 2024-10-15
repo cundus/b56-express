@@ -1,17 +1,20 @@
-import { CreateThreadDto } from '../dto/thread-dto'
+import { CreateThreadDto, ThreadImage } from '../dto/thread-dto'
 import { prisma } from '../libs/prisma'
 
 export const createThread = async (createThreadDto: CreateThreadDto) => {
+  const { images, ...data } = createThreadDto
+
   return prisma.thread.create({
-    data: {
-      ...createThreadDto,
-      mainThreadId: createThreadDto.mainThreadId ? +createThreadDto.mainThreadId : null,
-      images: {
-        createMany: {
-          data: createThreadDto.images!.map((image) => ({ url: image.url }))
-        }
-      }
-    }
+    data
+  })
+}
+
+export const createThreadImages = async (images: ThreadImage[], id: number) => {
+  return prisma.threadImage.createMany({
+    data: images.map((image) => ({
+      url: image.url,
+      threadId: id
+    }))
   })
 }
 

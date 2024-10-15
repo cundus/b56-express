@@ -2,7 +2,12 @@ import { CreateThreadDto } from '../dto/thread-dto'
 import * as threadRepository from '../repositories/thread'
 
 export const createThread = async (body: CreateThreadDto) => {
-  return await threadRepository.createThread(body)
+  const thread = await threadRepository.createThread(body)
+  if (body.images) {
+    await threadRepository.createThreadImages(body.images, thread.id)
+  }
+
+  return thread
 }
 
 export const getThread = async (id: number) => {
