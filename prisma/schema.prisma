@@ -1,0 +1,79 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  email     String   @unique
+  username  String
+  password  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+
+  profile   Profile?
+  threads   Thread[]
+  follower  Follows[] @relation("follower")
+  following Follows[] @relation("following")
+  likes     Likes[]
+}
+
+model Profile {
+  id         Int     @id @default(autoincrement())
+  fullname   String?
+  avatar     String?
+  background String?
+  bio        String?
+
+  userId Int  @unique
+  user   User @relation(fields: [userId], references: [id])
+}
+
+model Thread {
+  id           Int           @id @default(autoincrement())
+  content      String?
+  userId       Int
+  mainThreadId Int?
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @default(now())
+  images       ThreadImage[]
+
+  likes      Likes[]
+  user       User     @relation(references: [id], fields: [userId])
+  mainThread Thread?  @relation("ThreadReplies", references: [id], fields: [mainThreadId])
+  replies    Thread[] @relation("ThreadReplies")
+}
+
+model ThreadImage {
+  id       Int    @id @default(autoincrement())
+  url      String
+  threadId Int
+
+  thread Thread @relation(references: [id], fields: [threadId])
+}
+
+model Follows {
+  follower    User @relation("follower", fields: [followerId], references: [id])
+  followerId  Int
+  following   User @relation("following", fields: [followingId], references: [id])
+  followingId Int
+
+  @@id([followingId, followerId])
+}
+
+model Likes {
+  threadId Int
+  userId   Int
+
+  thread Thread @relation(fields: [threadId], references: [id])
+  user   User   @relation(fields: [userId], references: [id])
+
+  @@id([threadId, userId])
+}
