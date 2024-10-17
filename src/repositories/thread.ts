@@ -42,7 +42,7 @@ export const findThreadById = async (id: number) => {
   })
 }
 
-export const findThreadByFollowerId = async (id: number, skip: number) => {
+export const findThreadByFollowerId = async (id: number, take: number) => {
   return prisma.thread.findMany({
     where: {
       OR: [
@@ -77,7 +77,6 @@ export const findThreadByFollowerId = async (id: number, skip: number) => {
         }
       }
     },
-    take: 10,
-    skip: skip
+    take: take
   })
 }
