@@ -77,6 +77,9 @@ export const findThreadByFollowerId = async (id: number, take: number) => {
         }
       }
     },
-    take: take
+    take: take,
+    orderBy: {
+      createdAt: 'desc'
+    }
   })
 }

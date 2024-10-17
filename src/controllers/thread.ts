@@ -54,7 +54,6 @@ export const feed = async (req: Request, res: Response) => {
   try {
     const userId = res.locals.user.id
     const take = req.query.take ? +req.query.take : 0
-    console.log(take)
 
     const threads = await threadService.getThreadsByLoggedInUser(userId, take)
     res.json(threads)
