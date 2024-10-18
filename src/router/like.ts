@@ -1,8 +1,9 @@
 import { Router } from 'express'
-import * as threadController from '../controllers/thread'
+import * as likeController from '../controllers/like'
 import { authentication } from '../middlewares/authentication'
 const likeRouter = Router()
 
-likeRouter.post('/create', authentication, threadController.createThread)
+likeRouter.post('/', authentication, likeController.createLike)
+likeRouter.get('/:threadId', authentication, likeController.checkLike)
 
 export default likeRouter
